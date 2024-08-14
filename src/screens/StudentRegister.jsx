@@ -9,7 +9,7 @@ function StudentRegister() {
     regd: '',
     email: '',
     dob: '',
-    study_year: '',
+    year: '',
     branch: '',
     iscr: '',
     password1: '',
@@ -29,21 +29,25 @@ function StudentRegister() {
     e.preventDefault();
     console.log(formData);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth/register`, formData);
-      console.log('Success:', response.data);
-      setFormData({
-        fname: '',
-        lname: '',
-        regd: '',
-        email: '',
-        dob: '',
-        study_year: '',
-        branch: '',
-        iscr: '',
-        password1: '',
-        password2: '',
-        bulk: 'false'
-      });
+      if(formData.password1 === formData.password2){
+          formData.password = formData.password1;
+          const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth/register`, formData);
+          console.log('Success:', response.data);
+          setFormData({
+            fname: '',
+            lname: '',
+            regd: '',
+            email: '',
+            dob: '',
+            year: '',
+            branch: '',
+            iscr: '',
+            password1: '',
+            password2: '',
+            password : '',
+            bulk: 'false'
+          });
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -90,8 +94,8 @@ function StudentRegister() {
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="number" min={1} max={4} className="form-control form-control-lg light-300" id="study_year" name="study_year" value={formData.study_year} onChange={handleChange} required/>
-                      <label htmlFor="study_year" className="light-300">Year Of Study*</label>
+                      <input type="number" min={1} max={4} className="form-control form-control-lg light-300" id="year" name="year" value={formData.year} onChange={handleChange} required/>
+                      <label htmlFor="year" className="light-300">Year Of Study*</label>
                     </div>
                   </div>
                   <div className="col-12">
