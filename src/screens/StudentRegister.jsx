@@ -14,43 +14,63 @@ function StudentRegister() {
                 <form className="contact_form row" method="post" action="#">
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="text" className="form-control form-control-lg light-300" id="name" name="name" placeholder="Your Name*" required/>
-                      <label for="name light-300">Your Name*</label>
+                      <input type="text" className="form-control form-control-lg light-300" id="fname" name="fname" placeholder="Your Name*" required/>
+                      <label for="name light-300">First Name*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="text" className="form-control form-control-lg light-300" id="email" name="email" placeholder="Your Email*" required/>
-                      <label for="email light-300">Your Email*</label>
+                      <input type="text" className="form-control form-control-lg light-300" id="lname" name="lname" placeholder="Your Name*" required/>
+                      <label for="name light-300">Last Name*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="text" className="form-control form-control-lg light-300" id="phone" name="phone" placeholder="Your Phone*" required/>
-                      <label for="phone light-300">Your Phone*</label>
+                      <input type="text" className="form-control form-control-lg light-300" id="regd" name="regd" placeholder="Your Email*" required/>
+                      <label for="email light-300">Registration Number*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="file" className="form-control form-control-lg light-300" id="avatar" name="avatar" placeholder="Your avatar"/>
-                      <label for="address light-300">Avatar</label>
+                      <input type="email" className="form-control form-control-lg light-300" id="email" name="email" placeholder="Your Email*" required/>
+                      <label for="email light-300">Email ID*</label>
+                    </div>
+                  </div>
+                  <div className="col-lg-6 mb-4">
+                    <div className="form-floating">
+                      <input type="date" className="form-control form-control-lg light-300" id="dob" name="dob" placeholder="Your Phone*" required/>
+                      <label for="phone light-300">Date Of Birth*</label>
+                    </div>
+                  </div>
+                  <div className="col-lg-6 mb-4">
+                    <div className="form-floating">
+                      <input type="number" min={1} max={4} className="form-control form-control-lg light-300" id="study_year" name="study_year" required/>
+                      <label for="phone light-300">Year Of Study*</label>
                     </div>
                   </div>
                   <div className="col-12">
                     <div className="form-floating mb-4">
-                      <input type="text" className="form-control form-control-lg light-300" id="address" name="address" placeholder="address*" required/>
-                      <label for="subject light-300">Your Address*</label>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="form-floating mb-4">
-                      <select className="form-select form-control form-control-lg light-300" id="coursename" name="coursename" aria-label="Default select">
-                        <option selected>Select Course*</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      <select className="form-select form-control form-control-lg light-300" id="branch" name="branch" aria-label="Default select">
+                        <option selected>Select Stream*</option>
+                        <option value="cse">CSE</option>
+                        <option value="ece">ECE</option>
+                        <option value="eee">EEE</option>
+                        <option value="csd">CSD</option>
+                        <option value="mech">MECH</option>
+                        <option value="che">Chemical</option>
+                        <option value="civ">Civil</option>
                       </select>
-                      <label for="subject light-300">Select Course*</label>
+                      <label for="subject light-300">Select Branch*</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating mb-4">
+                      <select className="form-select form-control form-control-lg light-300" id="iscr" name="iscr" aria-label="Default select">
+                        <option selected>Is a CR?*</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <label for="subject light-300">Choose previlege*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
