@@ -29,7 +29,7 @@ function StudentRegister() {
     e.preventDefault();
     console.log(formData);
     try {
-      const response = await axios.post(`${process.env.BACKEND_BASE_URL}/register`, formData);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth/register`, formData);
       console.log('Success:', response.data);
       setFormData({
         fname: '',
