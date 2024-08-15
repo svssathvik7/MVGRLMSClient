@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../actions/teacherActions';
 import { NavLink } from "react-router-dom";
@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import Alert from '../components/Alert';
 import Footer from '../components/Footer';
 
-function TeacherLogin({history}) {
+function TeacherLogin({ history }) {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -14,10 +14,10 @@ function TeacherLogin({history}) {
   const dispatch = useDispatch()
 
   const teacherLogin = useSelector(state => state.teacherLogin)
-  const {loading, error, teacherInfo} = teacherLogin
+  const { loading, error, teacherInfo } = teacherLogin
 
   useEffect(() => {
-    if(teacherInfo) {
+    if (teacherInfo) {
       history.push('/teacher_dashboard')
     }
   }, [history, teacherInfo])
@@ -33,21 +33,21 @@ function TeacherLogin({history}) {
         <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
           <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
             <div className="banner-content col-lg-8 col-12 m-lg-auto text-center">
-            {error && <Alert type='danger'>{error}</Alert>}
+              {error && <Alert type='danger'>{error}</Alert>}
               <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Teacher Login</h1>
               <div className="col-md-8 mx-auto my-5 text-dark">
                 <form className="contact_form row" onSubmit={submitHandler}>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="text" className="form-control form-control-lg light-300" value={email} id="email" name="email" 
-                      placeholder="Email*" onChange={(event) => { setEmail(event.target.value) }} required/>
+                      <input type="text" className="form-control form-control-lg light-300" value={email} id="email" name="email"
+                        placeholder="Email*" onChange={(event) => { setEmail(event.target.value) }} required />
                       <label for="email light-300">Email*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="password" className="form-control form-control-lg light-300" value={password} id="password" name="password" 
-                      placeholder="Password*" onChange={(event) => { setPassword(event.target.value) }} required/>
+                      <input type="password" className="form-control form-control-lg light-300" value={password} id="password" name="password"
+                        placeholder="Password*" onChange={(event) => { setPassword(event.target.value) }} required />
                       <label for="password light-300">Password*</label>
                     </div>
                   </div>
@@ -68,7 +68,7 @@ function TeacherLogin({history}) {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </div>
   )
 }

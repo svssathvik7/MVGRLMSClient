@@ -15,6 +15,7 @@ import TeacherTests from "./screens/TeacherTests";
 import AddQuestion from "./screens/AddQuestion";
 import StudentLogin from "./screens/StudentLogin";
 import StudentRegister from "./screens/StudentRegister";
+import BulkRegister from "./screens/BulkRegister";
 import StudentDash from "./screens/StudentDash";
 import './App.css';
 
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/add_question" component={AddQuestion} />
           <Route exact path="/student_login" component={StudentLogin} />
           <Route exact path="/student_register" component={StudentRegister} />
+          <Route exact path="/bulk_register" component={BulkRegister} />
           <Route exact path="/student_dashboard" component={StudentDash} />
           <Redirect to="/" />
         </Switch>

@@ -14,6 +14,8 @@ function StudentRegister() {
     iscr: '',
     password1: '',
     password2: '',
+    password: '',
+    faculty_email: '',
     bulk: 'false'
   });
 
@@ -41,10 +43,12 @@ function StudentRegister() {
           dob: '',
           year: '',
           branch: '',
-          iscr: '',
+          isadmin: false,
+          iscr: false,
           password1: '',
           password2: '',
           password: '',
+          faculty_email: '',
           bulk: 'false'
         });
       }
@@ -100,6 +104,12 @@ function StudentRegister() {
                   </div>
                   <div className="col-12">
                     <div className="form-floating mb-4">
+                      <input type="text" className="form-control form-control-lg light-300" id="faculty_email" name="faculty_email" value={formData.faculty_email} onChange={handleChange} placeholder="Faculty Email*" required />
+                      <label htmlFor="facutly_email" className="light-300">Authorizer Email*</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating mb-4">
                       <select className="form-select form-control form-control-lg light-300" id="branch" name="branch" value={formData.branch} onChange={handleChange} aria-label="Default select">
                         <option value="" disabled>Select Stream*</option>
                         <option value="cse">CSE</option>
@@ -115,12 +125,25 @@ function StudentRegister() {
                   </div>
                   <div className="col-12">
                     <div className="form-floating mb-4">
-                      <select className="form-select form-control form-control-lg light-300" id="iscr" name="iscr" value={formData.iscr} onChange={handleChange} aria-label="Default select">
+                      <select className="form-select form-control form-control-lg light-300" id="iscr" name="iscr" onChange={(e) => {
+                        const res = e.target.value;
+                        if (res === "yes") {
+                          // console.log(res);
+                          setFormData((prev) => {
+                            return { ...prev, iscr: true }
+                          });
+                        }
+                        else {
+                          setFormData((prev) => {
+                            return { ...prev, iscr: false }
+                          });
+                        }
+                      }} aria-label="Default select">
                         <option value="" disabled>Is a CR?*</option>
-                        <option value="yes">Yes</option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                       </select>
-                      <label htmlFor="iscr" className="light-300">Choose privilege*</label>
+                      <label htmlFor="iscr" className="light-300">Is a CR?*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
@@ -135,8 +158,9 @@ function StudentRegister() {
                       <label htmlFor="password2" className="light-300">Confirm Password*</label>
                     </div>
                   </div>
-                  <div className="col-md-12 col-12 mx-auto my-3">
-                    <button type="submit" className="btn btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register</button>
+                  <div className=" d-flex align-items-center w-100 flex-column col-md-12 col-12 mx-auto my-3">
+                    <button type="submit" className="btn w-30 btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register</button>
+                    <NavLink to="/student_bulk_register" className=' text-white m-1'>Register Students in Bulk?</NavLink>
                   </div>
                 </form>
               </div>
