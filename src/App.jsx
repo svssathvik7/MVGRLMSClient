@@ -17,32 +17,36 @@ import StudentLogin from "./screens/StudentLogin";
 import StudentRegister from "./screens/StudentRegister";
 import BulkRegister from "./screens/BulkRegister";
 import StudentDash from "./screens/StudentDash";
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import NotificationContext from "./contexts/NotificationContext";
 
 function App() {
   return (
     <div className="app">
       <BrowserRouter>
-        <Navbar />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about" component={About} />
-          <Route exact path="/courses" component={Courses} />
-          <Route exact path="/tests" component={Tests} />
-          <Route exact path="/contact" component={Contact} />
-          <Route exact path="/notices" component={Notices} />
-          <Route exact path="/teacher_login" component={TeacherLogin} />
-          <Route exact path="/teacher_register" component={TeacherRegister} />
-          <Route exact path="/teacher_dashboard" component={TeacherDash} />
-          <Route exact path="/teacher_courses" component={TeacherCourses} />
-          <Route exact path="/teacher_tests" component={TeacherTests} />
-          <Route exact path="/add_question" component={AddQuestion} />
-          <Route exact path="/student_login" component={StudentLogin} />
-          <Route exact path="/student_register" component={StudentRegister} />
-          <Route exact path="/bulk_register" component={BulkRegister} />
-          <Route exact path="/student_dashboard" component={StudentDash} />
-          <Redirect to="/" />
-        </Switch>
+        <NotificationContext>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/about" component={About} />
+            <Route exact path="/courses" component={Courses} />
+            <Route exact path="/tests" component={Tests} />
+            <Route exact path="/contact" component={Contact} />
+            <Route exact path="/notices" component={Notices} />
+            <Route exact path="/teacher_login" component={TeacherLogin} />
+            <Route exact path="/teacher_register" component={TeacherRegister} />
+            <Route exact path="/teacher_dashboard" component={TeacherDash} />
+            <Route exact path="/teacher_courses" component={TeacherCourses} />
+            <Route exact path="/teacher_tests" component={TeacherTests} />
+            <Route exact path="/add_question" component={AddQuestion} />
+            <Route exact path="/student_login" component={StudentLogin} />
+            <Route exact path="/student_register" component={StudentRegister} />
+            <Route exact path="/bulk_register" component={BulkRegister} />
+            <Route exact path="/student_dashboard" component={StudentDash} />
+            <Redirect to="/" />
+          </Switch>
+        </NotificationContext>
       </BrowserRouter>
     </div>
   );

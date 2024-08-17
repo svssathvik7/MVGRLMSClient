@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import Footer from '../components/Footer';
 import axios from "axios";
+import { nContext } from '../contexts/NotificationContext';
+import { ToastContainer } from 'react-toastify';
 function StudentRegister() {
+  const { notify } = useContext(nContext);
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
@@ -51,14 +54,20 @@ function StudentRegister() {
           faculty_email: '',
           bulk: 'false'
         });
+        notify(response.message);
+      }
+      else {
+        notify("Passwords should match");
       }
     } catch (error) {
+      notify("There is some error, Please try again.");
       console.error('Error:', error);
     }
   };
 
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} theme="dark" />
       <section>
         <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
           <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
@@ -160,7 +169,7 @@ function StudentRegister() {
                   </div>
                   <div className=" d-flex align-items-center w-100 flex-column col-md-12 col-12 mx-auto my-3">
                     <button type="submit" className="btn w-30 btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register</button>
-                    <NavLink to="/student_bulk_register" className=' text-white m-1'>Register Students in Bulk?</NavLink>
+                    <NavLink to="/bulk_register" className=' text-white m-1'>Register in Bulk?</NavLink>
                   </div>
                 </form>
               </div>

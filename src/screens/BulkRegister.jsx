@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import Papa from 'papaparse';
 import { columnHeadings } from '../constants/bulkColumnsHeadings';
 import Footer from '../components/Footer';
 import axios from "axios";
+import { nContext } from '../contexts/NotificationContext';
+import { ToastContainer } from 'react-toastify';
+
 function BulkRegister() {
+    const { notify } = useContext(nContext);
     const [formData, setFormData] = useState({
         client_format: '',
         format: 'json',
@@ -27,27 +31,30 @@ function BulkRegister() {
     const handleParsing = (e) => {
 
         if (formData.client_format === '') {
-            console.log('CHOOSE THE FORMAT FIRST.');
-            //notification to fill the format first before filling the text field.
+            notify("Choose file format first");
         }
         else {
 
             const { name, value } = e.target;
 
             var columnH;
+            var formattedValue;
 
             if (formData.client_format === 'tsv') {
                 columnH = columnHeadings.join('\t');
+                formattedValue = value.replace(/ {4}/g, '\t');
             }
             else {
                 columnH = columnHeadings.join(',');
+                formattedValue = value;
             }
 
-            const bulkDataString = `${columnH}\n${value}`;
+            const bulkDataString = `${columnH}\n${formattedValue}`;
 
             Papa.parse(bulkDataString, {
                 header: true,
                 skipEmptyLines: true,
+                delimiter: formData.client_format === 'tsv' ? '\t' : ',',
                 complete: (results) => {
                     console.log('Parsed Results:', results);     // Log the parsed results
                     setFormData({
@@ -57,6 +64,7 @@ function BulkRegister() {
                     })
                 },
                 error: (error) => {
+                    notify("Parsing error, Please check your data.")
                     console.error('Parsing Error:', error); // Log any parsing errors
                 }
             });
@@ -68,6 +76,8 @@ function BulkRegister() {
         console.log(formData);
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth/register`, formData);
+            //based on backend handling we can add a toast here.
+            notify(response.message);
             console.log('Success:', response.data);
             setFormData({
                 dataText: '',
@@ -76,23 +86,22 @@ function BulkRegister() {
                 bulk: true,
                 format: ''
             });
+
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
-    console.log(formData.data);
-
-
     return (
         <div>
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} theme="dark" />
             <section>
-                <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
-                    <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
-                        <div className="banner-content col-lg-8 col-12 text-center">
+                <div id="page_banner2" className="banner-wrapper d-flex flex-column align-items-center justify-content-center bg-light w-fit py-5 position-relative">
+                    <div className="container w-fit m-0 text-light d-flex justify-content-center align-items-center py-5 p-0">
+                        <div className="banner-content col-lg-8 col-12 text-center w-fit">
                             <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Student Bulk Registration</h1>
-                            <div className="col-10 col-md-10 mx-auto my-5 text-dark">
-                                <form onSubmit={handleSubmit} className="contact_form row">
+                            <div className="col-10 col-md-10 mx-auto my-5 text-dark w-fit">
+                                <form onSubmit={handleSubmit} className="contact_form row w-fit">
                                     <div className="col-12">
                                         <div className="form-floating mb-4">
                                             <select className="form-select form-control form-control-lg light-300" id="client_format" name="client_format" value={formData.client_format} onChange={handleChange} aria-label="Default select">
@@ -112,50 +121,128 @@ function BulkRegister() {
 
                                     <div className="col-12">
                                         <div className="form-floating mb-4">
-                                            <textarea cols="50" className="form-control h-20em-important col-lg form-control-lg light-300" id="data" name="data" value={formData.dataText} onChange={handleParsing} placeholder="Paste bulk data here*" required />
+                                            <textarea cols="50" style={{ fontSize: '1em' }} className="form-control h-20em-important text-base form-control-lg light-300" id="data" name="data" value={formData.dataText} onChange={handleParsing} placeholder="Paste bulk data here*" required />
                                             <label htmlFor="data" className="light-300">Paste your file here*</label>
                                         </div>
                                     </div>
 
-                                    <div className='container'>
+                                    <div className='w-fit d-flex flex-column justify-content-between align-items-center p-5 gap-5'>
                                         {formData.data !== null &&
-                                            <table className="table-auto w-full border-collapse border border-gray-300 bg-white text-xs">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">FName</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">LName</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Regd</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Email</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">DOB</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Year</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Branch</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Admin</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">CR</th>
-                                                        <th className="border border-gray-300 px-2 py-1 font-bold text-center">Password</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {formData.data && formData.data.slice(0, 5).map((row, index) => (
-                                                        <tr key={index} className="text-center">
-                                                            <td className="border border-gray-300 px-2 py-1">{row.fname}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.lname}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.regd}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.email}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.dob}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.year}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.branch}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.isAdmin ? 'Yes' : 'No'}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.isCr ? 'Yes' : 'No'}</td>
-                                                            <td className="border border-gray-300 px-2 py-1">{row.password}</td>
+                                            <div>
+                                                <h6 className="banner-heading text-white display-5 mb-2 pb-5 semi-bold-400 typo-space-line-center">Top 5 records as a reference to ensure you store the data correctly</h6>
+                                                {/* <h6 style={{ textAlign: "justify" }} className='text-white text-left mb-4'>Displaying the top 5 records as a reference to ensure you store the data correctly. Please verify the structure and content before final submission</h6> */}
+                                                <table style={{ width: "80vw" }} className="table-auto w-[80vw] mt-5 border-collapse border rounded border-gray-300 bg-white text-xs">
+                                                    <thead>
+                                                        <tr>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">FName</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">LName</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Regd</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Email</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">DOB</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Year</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Branch</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Admin</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">CR</th>
+                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Password</th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {formData.data && formData.data.slice(0, 5).map((row, index) => (
+                                                            <tr key={index} className="text-center">
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.fname ? (row.fname.length > 10 ? row.fname.substring(0, 10) + '...' : row.fname) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.lname ? (row.lname.length > 10 ? row.lname.substring(0, 10) + '...' : row.lname) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.regd ? (row.regd.length > 10 ? row.regd.substring(0, 10) + '...' : row.regd) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.email ? (row.email.length > 10 ? row.email.substring(0, 10) + '...' : row.email) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.dob ? (row.dob.length > 10 ? row.dob.substring(0, 10) + '...' : row.dob) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.year ? (row.year.length > 10 ? row.year.substring(0, 10) + '...' : row.year) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.branch ? (row.branch.length > 10 ? row.branch.substring(0, 10) + '...' : row.branch) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.isAdmin ? 'Yes' : 'No'}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-2">
+                                                                    {row?.isCr ? 'Yes' : 'No'}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-2 py-1">
+                                                                    {row?.password ? (row.password.length > 10 ? row.password.substring(0, 10) + '...' : row.password) : ''}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+
+                                                {/* <table style={{ width: "80vw" }} className="table-auto w-[80vw] mt-5 border-collapse rounded-lg overflow-hidden bg-white text-xs">
+                                                    <thead className="bg-gray-200">
+                                                        <tr>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">FName</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">LName</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Regd</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Email</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">DOB</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Year</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Branch</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Admin</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">CR</th>
+                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Password</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="bg-gray-50">
+                                                        {formData.data && formData.data.slice(0, 5).map((row, index) => (
+                                                            <tr key={index} className="text-center even:bg-gray-100">
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.fname ? (row.fname.length > 10 ? row.fname.substring(0, 10) + '...' : row.fname) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.lname ? (row.lname.length > 10 ? row.lname.substring(0, 10) + '...' : row.lname) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.regd ? (row.regd.length > 10 ? row.regd.substring(0, 10) + '...' : row.regd) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.email ? (row.email.length > 10 ? row.email.substring(0, 10) + '...' : row.email) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.dob ? (row.dob.length > 10 ? row.dob.substring(0, 10) + '...' : row.dob) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.year ? (row.year.length > 10 ? row.year.substring(0, 10) + '...' : row.year) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.branch ? (row.branch.length > 10 ? row.branch.substring(0, 10) + '...' : row.branch) : ''}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.isAdmin ? 'Yes' : 'No'}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.isCr ? 'Yes' : 'No'}
+                                                                </td>
+                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
+                                                                    {row?.password ? (row.password.length > 10 ? row.password.substring(0, 10) + '...' : row.password) : ''}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table> */}
+
+                                            </div>
                                         }
                                     </div>
 
                                     <div className=" d-flex align-items-center w-100 flex-column col-md-12 col-12 mx-auto my-3">
-                                        <button type="submit" className="btn w-30 btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register</button>
+                                        <button type="submit" className="btn w-30 btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register All</button>
                                     </div>
                                 </form>
                             </div>

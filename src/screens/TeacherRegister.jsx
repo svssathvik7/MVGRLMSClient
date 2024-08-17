@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import Footer from '../components/Footer';
 import axios from "axios";
+import { ToastContainer } from 'react-toastify';
+import { nContext } from '../contexts/NotificationContext';
 function TeacherRegistration() {
+  const { notify } = useContext(nContext);
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
@@ -30,6 +33,7 @@ function TeacherRegistration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+    console.log('helo');
     try {
       if (formData.password1 === formData.password2) {
         formData.password = formData.password1;
@@ -50,14 +54,20 @@ function TeacherRegistration() {
           pass_key: '',
           bulk: 'false'
         });
+        notify(response.message);
+      }
+      else {
+        notify("Passwords are not matching.")
       }
     } catch (error) {
+      notify("There is some error, Please try again.")
       console.error('Error:', error);
     }
   };
 
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} theme="dark" />
       <section>
         <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
           <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">

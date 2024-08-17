@@ -207,3 +207,21 @@ footer a.text-light:hover {
   color: #bfbfbf !important;
   transition-duration: 0.15s;
 }
+
+
+@media screen and (max-width:800px) {
+
+  .Toastify__toast {
+    right: 0;
+    position: absolute;
+    min-height: unset !important;
+    font-size: .8em !important;
+    padding: 6px 15px !important;
+  }
+
+  .Toastify__toast-container--top-right {
+    top: 5% !important;
+    left: unset !important;
+    right: 5% !important;
+  }
+}
