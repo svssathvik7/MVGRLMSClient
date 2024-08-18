@@ -1,0 +1,10 @@
+// src/store/persistConfig.js
+import storage from 'redux-persist/lib/storage'; // or use sessionStorage
+
+const persistConfig = {
+    key: 'root',
+    storage,
+    whitelist: ['teacher'], // Only persist the teacher slice
+};
+
+export default persistConfig;

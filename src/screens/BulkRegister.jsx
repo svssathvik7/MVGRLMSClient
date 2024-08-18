@@ -99,7 +99,7 @@ function BulkRegister() {
                 <div id="page_banner2" className="banner-wrapper d-flex flex-column align-items-center justify-content-center bg-light w-fit py-5 position-relative">
                     <div className="container w-fit m-0 text-light d-flex justify-content-center align-items-center py-5 p-0">
                         <div className="banner-content col-lg-8 col-12 text-center w-fit">
-                            <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Student Bulk Registration</h1>
+                            <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Bulk Registration</h1>
                             <div className="col-10 col-md-10 mx-auto my-5 text-dark w-fit">
                                 <form onSubmit={handleSubmit} className="contact_form row w-fit">
                                     <div className="col-12">

@@ -1,17 +1,36 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../actions/teacherActions';
+import { store } from "../store/store";
+// import { logout } from '../actions/teacherActions';
+import { persistStore } from "redux-persist";
 import { NavLink } from "react-router-dom";
+import { logOutTeacher } from '../features/teacher/teacherSlice';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+
+
+const persistor = persistStore(store);
 
 function Navbar() {
 
-  const dispatch = useDispatch()
+  const history = useHistory();
 
-  const teacherLogin = useSelector(state => state.teacherLogin)
-  const {loading, error, teacherInfo} = teacherLogin
+  const dispatch = useDispatch();
 
-  const logoutHandler = () => {
-    dispatch(logout())
+  const teacherLoggedIn = useSelector(state => state.teacher.logged);
+
+  const teacherData = useSelector(state => state.teacher.teacherData);
+
+  // const teacherLogin = useSelector(state => state.teacherLogin)
+  // const { loading, error, teacherInfo } = teacherLogin
+
+  // const logoutHandler = () => {
+  //   dispatch(logout())
+  // }
+
+  const handleLogOut = () => {
+    dispatch(logOutTeacher());
+    persistor.purge();
+    history.push('/');
   }
 
   return (
@@ -49,33 +68,36 @@ function Navbar() {
               </li>
             </ul>
             <div className="navbar align-self-center d-flex">
-              
-              {teacherInfo ? (
+
+              {teacherLoggedIn ? (
                 <>
                   <NavLink className="nav-link text-success" to="/teacher_dashboard" exact title="Dashboard">
-                    Hi, <strong>{teacherInfo.tchr_name}</strong>
+                    Hi, <strong>{teacherData?.fname}</strong>
                   </NavLink>
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
                     <i className="bi-bell text-primary" role="img"></i>
                   </NavLink>
-                  <NavLink className="nav-link" onClick={logoutHandler} to="" title="Logout">
+                  <NavLink className="nav-link" to="/student_register" exact title="Student">
+                    <i className="bi-person-badge text-primary" role="img"></i>
+                  </NavLink>
+                  <NavLink className="nav-link" onClick={handleLogOut} to="" title="Logout">
                     <i className="bi-box-arrow-right text-danger" role="img"></i>
                   </NavLink>
                 </>
-                ) : (
-                  <>
-                    <NavLink className="nav-link" to="/notices" exact title="Notices">
-                      <i className="bi-bell text-primary" role="img"></i>
-                    </NavLink>
-                    <NavLink className="nav-link" to="/student_login" exact title="Student">
-                      <i className="bi-person-badge text-primary" role="img"></i>
-                    </NavLink>
-                    <NavLink className="nav-link" to="/teacher_login" exact title="Teacher">
-                      <i className="bi-person-circle text-success" role="img"></i>
-                    </NavLink>
-                  </>
-                )}        
-        
+              ) : (
+                <>
+                  <NavLink className="nav-link" to="/notices" exact title="Notices">
+                    <i className="bi-bell text-primary" role="img"></i>
+                  </NavLink>
+                  <NavLink className="nav-link" to="/student_login" exact title="Student">
+                    <i className="bi-person-badge text-primary" role="img"></i>
+                  </NavLink>
+                  <NavLink className="nav-link" to="/teacher_login" exact title="Teacher">
+                    <i className="bi-person-circle text-success" role="img"></i>
+                  </NavLink>
+                </>
+              )}
+
             </div>
           </div>
         </div>

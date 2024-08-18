@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { createCourse, getSpecificCourses } from '../actions/courseActions';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import TeacherNavs from '../components/TeacherNavs';
@@ -30,16 +29,16 @@ function TeacherCourses() {
 
   //console.log(spcfcourses)
 
-  useEffect(() => {
-    dispatch(getSpecificCourses())
-  }, [dispatch, course, updatedCourse, courseDeleted])
+  // useEffect(() => {
+  //   dispatch(getSpecificCourses())
+  // }, [dispatch, course, updatedCourse, courseDeleted])
 
   const submitHandler = (event) => {
     event.preventDefault()
-    dispatch(createCourse(coursename, outline, units))
-    setCourseName('')
-    setUnits('')
-    setOutline('')
+    // dispatch(createCourse(coursename, outline, units))
+    // setCourseName('')
+    // setUnits('')
+    // setOutline('')
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listCourses } from '../actions/courseActions';
+// import { listCourses } from '../actions/courseActions';
 import CourseBox from '../components/CourseBox';
 import Footer from '../components/Footer';
 
@@ -8,13 +8,13 @@ function Courses() {
 
     const dispatch = useDispatch()
 
-    const courseList = useSelector(state => state.courseList)
-    const { loading, error, courses} = courseList
+    // const courseList = useSelector(state => state.courseList)
+    // const { loading, error, courses} = courseList
 
-    useEffect(() => {
-      dispatch(listCourses())
+    // useEffect(() => {
+    //   dispatch(listCourses())
 
-    },[dispatch]);
+    // },[dispatch]);
 
   return (
     <div>
@@ -69,14 +69,14 @@ function Courses() {
       <section className="container overflow-hidden py-5">
         <div className="row gx-5 gx-sm-3 gx-lg-5 gy-lg-5 gy-3 pb-3 courses">
 
-          {courses.map(course => (
+          {/* {courses.map(course => (
 
             <CourseBox
               courseName = {course.course_name}
               courseOutline = {course.course_outline}
             />
 
-          ))}
+          ))} */}
 
         </div>
       </section>

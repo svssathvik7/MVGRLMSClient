@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Footer from '../components/Footer';
 
 function StudentLogin() {
+
   return (
     <div>
       <section>
@@ -14,13 +15,13 @@ function StudentLogin() {
                 <form className="contact_form row" method="post" action="#">
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="text" className="form-control form-control-lg light-300" id="email" name="email" placeholder="Email*" required/>
+                      <input type="text" className="form-control form-control-lg light-300" id="email" name="email" placeholder="Email*" required />
                       <label for="email light-300">Email*</label>
                     </div>
                   </div>
                   <div className="col-lg-6 mb-4">
                     <div className="form-floating">
-                      <input type="password" className="form-control form-control-lg light-300" id="password" name="password" placeholder="Password*" required/>
+                      <input type="password" className="form-control form-control-lg light-300" id="password" name="password" placeholder="Password*" required />
                       <label for="password light-300">Password*</label>
                     </div>
                   </div>
@@ -41,7 +42,7 @@ function StudentLogin() {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </div>
   )
 }
