@@ -9,9 +9,6 @@ function StudentRegister() {
 
   const dispatch = useDispatch()
 
-  // const teacherLogin = useSelector(state => state.teacherLogin)
-  // const { loading, error, teacherInfo } = teacherLogin;
-
   const teacherLoggedIn = useSelector(state => state.teacher.logged);
 
 
@@ -29,7 +26,7 @@ function StudentRegister() {
     password2: '',
     password: '',
     faculty_email: '',
-    bulk: 'false'
+    bulk: false
   });
 
   const handleChange = (e) => {
@@ -62,7 +59,7 @@ function StudentRegister() {
           password2: '',
           password: '',
           faculty_email: '',
-          bulk: 'false'
+          bulk: false
         });
         notify(response.message);
       }
@@ -74,12 +71,6 @@ function StudentRegister() {
       console.error('Error:', error);
     }
   };
-
-  // useEffect(() => {
-  //   if (!teacherInfo) {
-  //     notify("Only a teacher can register a student.");
-  //   }
-  // })
 
   return (
     <div>

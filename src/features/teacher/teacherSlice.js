@@ -3,7 +3,6 @@ import axios from "axios";
 
 const initialState = {
     logged: false,
-    token: '',
     error: null,
     loading: false,
     teacherData: {
@@ -15,7 +14,6 @@ const initialState = {
         year: '',
         branch: '',
         isadmin: null,
-        password: '',
     }
 }
 export const teacherLogin = createAsyncThunk('teacher/login', async ({ regd, password }, { rejectWithValue }) => {
@@ -48,7 +46,7 @@ const teacherSlice = createSlice({
     reducers: {
         logOutTeacher: (state, action) => {
             state.logged = false;
-            state.token = '';
+            localStorage.removeItem('token');
             state.teacherData = null;
         },
         updateTeacherData: (state, action) => {
@@ -59,7 +57,7 @@ const teacherSlice = createSlice({
         builder
             .addCase(teacherLogin.fulfilled, (state, action) => {
                 state.teacherData = action.payload.user;
-                state.token = action.payload.token;
+                localStorage.setItem('token', action.payload.token);
                 state.logged = true;
             })
             .addCase(teacherLogin.rejected, (state, action) => {

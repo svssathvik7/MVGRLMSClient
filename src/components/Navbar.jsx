@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from "../store/store";
 // import { logout } from '../actions/teacherActions';
+import UserData from './UserData';
 import { persistStore } from "redux-persist";
 import { NavLink } from "react-router-dom";
 import { logOutTeacher } from '../features/teacher/teacherSlice';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import axios from 'axios';
+import { logOutStudent } from '../features/student/studentSlice';
 
 
 const persistor = persistStore(store);
@@ -16,22 +19,58 @@ function Navbar() {
 
   const dispatch = useDispatch();
 
-  const teacherLoggedIn = useSelector(state => state.teacher.logged);
+  const userData = UserData();
 
-  const teacherData = useSelector(state => state.teacher.teacherData);
+  // const teacherLoggedIn = useSelector(state => state.teacher.logged);
 
-  // const teacherLogin = useSelector(state => state.teacherLogin)
-  // const { loading, error, teacherInfo } = teacherLogin
+  // const studentLoggedIn = useSelector(state => state.student.logged)
 
-  // const logoutHandler = () => {
-  //   dispatch(logout())
-  // }
+  // const teacherData = useSelector(state => state.teacher.teacherData);
+
+  // const studentData = useSelector(state => state.student.studentData);
 
   const handleLogOut = () => {
-    dispatch(logOutTeacher());
+    if (userData.type === 'teacher') {
+      dispatch(logOutTeacher());
+    }
+    else {
+      dispatch(logOutStudent());
+    }
     persistor.purge();
     history.push('/');
   }
+
+  const validateToken = async () => {
+
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_BASE_URL}/auth/validate_token`,
+          {}, // empty body as we are only sending the token in headers
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`, // Send token in the Authorization header
+            },
+          }
+        );
+      } catch (error) {
+        handleLogOut();
+        console.error('Error validating token');
+      }
+    } else {
+      persistor.purge();
+      console.log('No token found in localStorage');
+    }
+  }
+
+
+  useEffect(() => {
+    if (userData.isLoggedIn) {
+      validateToken();
+    }
+  }, []);
 
   return (
     <div>
@@ -69,10 +108,10 @@ function Navbar() {
             </ul>
             <div className="navbar align-self-center d-flex">
 
-              {teacherLoggedIn ? (
+              {userData.isLoggedIn ? (
                 <>
                   <NavLink className="nav-link text-success" to="/teacher_dashboard" exact title="Dashboard">
-                    Hi, <strong>{teacherData?.fname}</strong>
+                    Hi, <strong>{userData?.data?.fname}</strong>
                   </NavLink>
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
                     <i className="bi-bell text-primary" role="img"></i>
