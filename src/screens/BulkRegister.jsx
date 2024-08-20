@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from "react-router-dom";
 import Papa from 'papaparse';
 import { columnHeadings } from '../constants/bulkColumnsHeadings';
 import Footer from '../components/Footer';
 import axios from "axios";
+import mobileStyles from '../constants/mobileStyles';
 import { nContext } from '../contexts/NotificationContext';
 import { ToastContainer } from 'react-toastify';
 
@@ -17,6 +18,8 @@ function BulkRegister() {
         faculty_email: '',
         bulk: true,
     });
+
+    const [mobileSize, setMobileSize] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -91,6 +94,19 @@ function BulkRegister() {
             console.error('Error:', error);
         }
     };
+    const checkScreenSize = () => {
+        const width = window.innerWidth;
+        setMobileSize(width < 768); // Adjust the breakpoint as needed
+    };
+
+    useEffect(() => {
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+
+        // Clean up event listener on component unmount
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
+
 
     return (
         <div>
@@ -126,118 +142,65 @@ function BulkRegister() {
                                         </div>
                                     </div>
 
-                                    <div className='w-fit d-flex flex-column justify-content-between align-items-center p-5 gap-5'>
+                                    <div className='contact_form w-fit d-flex flex-column justify-content-between align-items-center mt-5 mb-5'>
                                         {formData.data !== null &&
-                                            <div>
+                                            <>
                                                 <h6 className="banner-heading text-white display-5 mb-2 pb-5 semi-bold-400 typo-space-line-center">Top 5 records as a reference to ensure you store the data correctly</h6>
-                                                {/* <h6 style={{ textAlign: "justify" }} className='text-white text-left mb-4'>Displaying the top 5 records as a reference to ensure you store the data correctly. Please verify the structure and content before final submission</h6> */}
-                                                <table style={{ width: "80vw" }} className="table-auto w-[80vw] mt-5 border-collapse border rounded border-gray-300 bg-white text-xs">
-                                                    <thead>
-                                                        <tr>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">FName</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">LName</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Regd</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Email</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">DOB</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Year</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Branch</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Admin</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">CR</th>
-                                                            <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Password</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {formData.data && formData.data.slice(0, 5).map((row, index) => (
-                                                            <tr key={index} className="text-center">
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.fname ? (row.fname.length > 10 ? row.fname.substring(0, 10) + '...' : row.fname) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.lname ? (row.lname.length > 10 ? row.lname.substring(0, 10) + '...' : row.lname) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.regd ? (row.regd.length > 10 ? row.regd.substring(0, 10) + '...' : row.regd) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.email ? (row.email.length > 10 ? row.email.substring(0, 10) + '...' : row.email) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.dob ? (row.dob.length > 10 ? row.dob.substring(0, 10) + '...' : row.dob) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.year ? (row.year.length > 10 ? row.year.substring(0, 10) + '...' : row.year) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.branch ? (row.branch.length > 10 ? row.branch.substring(0, 10) + '...' : row.branch) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.isAdmin ? 'Yes' : 'No'}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-2">
-                                                                    {row?.isCr ? 'Yes' : 'No'}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-2 py-1">
-                                                                    {row?.password ? (row.password.length > 10 ? row.password.substring(0, 10) + '...' : row.password) : ''}
-                                                                </td>
+                                                <div style={mobileSize ? mobileStyles : {}} className='overflow-x-auto '>
+                                                    <table style={{ width: "80vw" }} className="table-auto w-[80vw] mt-5 border-collapse border rounded border-gray-300 bg-white text-xs">
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">FName</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">LName</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Regd</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Email</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">DOB</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Year</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Branch</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Admin</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">CR</th>
+                                                                <th className="border bg-body-secondary border-gray-300 px-2 py-2 font-bold text-center">Password</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-
-                                                {/* <table style={{ width: "80vw" }} className="table-auto w-[80vw] mt-5 border-collapse rounded-lg overflow-hidden bg-white text-xs">
-                                                    <thead className="bg-gray-200">
-                                                        <tr>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">FName</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">LName</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Regd</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Email</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">DOB</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Year</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Branch</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Admin</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">CR</th>
-                                                            <th className="border border-gray-300 px-4 py-2 font-bold text-center text-gray-700">Password</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="bg-gray-50">
-                                                        {formData.data && formData.data.slice(0, 5).map((row, index) => (
-                                                            <tr key={index} className="text-center even:bg-gray-100">
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.fname ? (row.fname.length > 10 ? row.fname.substring(0, 10) + '...' : row.fname) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.lname ? (row.lname.length > 10 ? row.lname.substring(0, 10) + '...' : row.lname) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.regd ? (row.regd.length > 10 ? row.regd.substring(0, 10) + '...' : row.regd) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.email ? (row.email.length > 10 ? row.email.substring(0, 10) + '...' : row.email) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.dob ? (row.dob.length > 10 ? row.dob.substring(0, 10) + '...' : row.dob) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.year ? (row.year.length > 10 ? row.year.substring(0, 10) + '...' : row.year) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.branch ? (row.branch.length > 10 ? row.branch.substring(0, 10) + '...' : row.branch) : ''}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.isAdmin ? 'Yes' : 'No'}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.isCr ? 'Yes' : 'No'}
-                                                                </td>
-                                                                <td className="border border-gray-300 px-4 py-2 text-gray-800">
-                                                                    {row?.password ? (row.password.length > 10 ? row.password.substring(0, 10) + '...' : row.password) : ''}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table> */}
-
-                                            </div>
+                                                        </thead>
+                                                        <tbody>
+                                                            {formData.data && formData.data.slice(0, 5).map((row, index) => (
+                                                                <tr key={index} className="text-center">
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.fname ? (row.fname.length > 10 ? row.fname.substring(0, 10) + '...' : row.fname) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.lname ? (row.lname.length > 10 ? row.lname.substring(0, 10) + '...' : row.lname) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.regd ? (row.regd.length > 10 ? row.regd.substring(0, 10) + '...' : row.regd) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.email ? (row.email.length > 10 ? row.email.substring(0, 10) + '...' : row.email) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.dob ? (row.dob.length > 10 ? row.dob.substring(0, 10) + '...' : row.dob) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.year ? (row.year.length > 10 ? row.year.substring(0, 10) + '...' : row.year) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.branch ? (row.branch.length > 10 ? row.branch.substring(0, 10) + '...' : row.branch) : ''}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.isAdmin ? 'Yes' : 'No'}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-2">
+                                                                        {row?.isCr ? 'Yes' : 'No'}
+                                                                    </td>
+                                                                    <td className="border border-gray-300 px-2 py-1">
+                                                                        {row?.password ? (row.password.length > 10 ? row.password.substring(0, 10) + '...' : row.password) : ''}
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </>
                                         }
                                     </div>
 
