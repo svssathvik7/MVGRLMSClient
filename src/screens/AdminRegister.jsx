@@ -1,18 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NavLink } from "react-router-dom";
 import Footer from '../components/Footer';
 import axios from "axios";
-import { nContext } from '../contexts/NotificationContext';
 import { ToastContainer } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-function StudentRegister() {
-
-  const dispatch = useDispatch()
-
-  const teacherLoggedIn = useSelector(state => state.teacher.logged);
-
-
+import { nContext } from '../contexts/NotificationContext';
+import { codeContext } from '../contexts/CodeValidityContext';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+function AdminRegister() {
   const { notify } = useContext(nContext);
+  const { isValid } = useContext(codeContext);
+  const history = useHistory();
+
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
@@ -21,11 +18,11 @@ function StudentRegister() {
     dob: '',
     year: '',
     branch: '',
-    iscr: '',
+    isadmin: true,
+    password: '',
     password1: '',
     password2: '',
-    password: '',
-    faculty_email: '',
+    pass_key: '',
     bulk: false
   });
 
@@ -53,38 +50,45 @@ function StudentRegister() {
           dob: '',
           year: '',
           branch: '',
-          isadmin: false,
-          iscr: false,
+          isadmin: true,
           password1: '',
           password2: '',
           password: '',
-          faculty_email: '',
-          bulk: false
+          pass_key: '',
+          bulk: 'false'
         });
-        notify(response.message);
+        if (response.status === 200) {
+          notify("Successfully registered..");
+        }
+        else {
+          notify("There is some issue with your registration...");
+        }
       }
       else {
-        notify("Passwords should match");
+        notify("Passwords are not matching.")
       }
     } catch (error) {
-      notify("There is some error, Please try again.");
+      notify("There is some error, Please try again.")
       console.error('Error:', error);
     }
   };
+
+  useEffect(() => {
+    if (isValid === false) {
+      notify("Admin already registered...");
+      history.push('/');
+    }
+  }, []);
 
   return (
     <div>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} theme="dark" />
       <section>
-        <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
-          <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
-            <div className="banner-content col-lg-8 col-12 m-lg-auto text-center">
-              <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Student Registration</h1>
-
-              {!teacherLoggedIn && <p className="banner-body py-3 text-white">
-                Only faculty can register students.
-              </p>}
-              {teacherLoggedIn &&
+        {isValid &&
+          <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
+            <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
+              <div className="banner-content col-lg-8 col-12 m-lg-auto text-center">
+                <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Admin Registration</h1>
                 <div className="col-10 col-md-10 mx-auto my-5 text-dark">
                   <form onSubmit={handleSubmit} className="contact_form row">
                     <div className="col-lg-6 mb-4">
@@ -102,7 +106,7 @@ function StudentRegister() {
                     <div className="col-lg-6 mb-4">
                       <div className="form-floating">
                         <input type="text" className="form-control form-control-lg light-300" id="regd" name="regd" value={formData.regd} onChange={handleChange} placeholder="Your Registration Number*" required />
-                        <label htmlFor="regd" className="light-300">Registration Number*</label>
+                        <label htmlFor="regd" className="light-300">Id Number*</label>
                       </div>
                     </div>
                     <div className="col-lg-6 mb-4">
@@ -120,19 +124,19 @@ function StudentRegister() {
                     <div className="col-lg-6 mb-4">
                       <div className="form-floating">
                         <input type="number" min={1} max={4} className="form-control form-control-lg light-300" id="year" name="year" value={formData.year} onChange={handleChange} required />
-                        <label htmlFor="year" className="light-300">Year Of Study*</label>
+                        <label htmlFor="year" className="light-300">Years Of Experience*</label>
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-floating mb-4">
-                        <input type="text" className="form-control form-control-lg light-300" id="faculty_email" name="faculty_email" value={formData.faculty_email} onChange={handleChange} placeholder="Faculty Email*" required />
-                        <label htmlFor="facutly_email" className="light-300">Authorizer Email*</label>
+                        <input type="text" className="form-control form-control-lg light-300" id="pass_key" name="pass_key" value={formData.pass_key} onChange={handleChange} placeholder="Pass Key*" required />
+                        <label htmlFor="pass_key" className="light-300">Pass Key*</label>
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-floating mb-4">
                         <select className="form-select form-control form-control-lg light-300" id="branch" name="branch" value={formData.branch} onChange={handleChange} aria-label="Default select">
-                          <option value="" disabled>Select Stream*</option>
+                          <option value="" disabled>Select Branch*</option>
                           <option value="cse">CSE</option>
                           <option value="ece">ECE</option>
                           <option value="eee">EEE</option>
@@ -142,28 +146,6 @@ function StudentRegister() {
                           <option value="civ">Civil</option>
                         </select>
                         <label htmlFor="branch" className="light-300">Select Branch*</label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-floating mb-4">
-                        <select className="form-select form-control form-control-lg light-300" id="iscr" name="iscr" onChange={(e) => {
-                          const res = e.target.value;
-                          if (res === "yes") {
-                            setFormData((prev) => {
-                              return { ...prev, iscr: true }
-                            });
-                          }
-                          else {
-                            setFormData((prev) => {
-                              return { ...prev, iscr: false }
-                            });
-                          }
-                        }} aria-label="Default select">
-                          <option value="" disabled>Is a CR?*</option>
-                          <option value="no">No</option>
-                          <option value="yes">Yes</option>
-                        </select>
-                        <label htmlFor="iscr" className="light-300">Is a CR?*</label>
                       </div>
                     </div>
                     <div className="col-lg-6 mb-4">
@@ -180,26 +162,17 @@ function StudentRegister() {
                     </div>
                     <div className=" d-flex align-items-center w-100 flex-column col-md-12 col-12 mx-auto my-3">
                       <button type="submit" className="btn w-30 btn-info btn-lg rounded-pill px-md-5 px-4 py-2 radius-0 text-light light-300">Register</button>
-                      <NavLink to="/bulk_register" className=' text-white m-1'>Register in Bulk?</NavLink>
                     </div>
                   </form>
                 </div>
-              }
-              <div className="col-10 col-md-8 mx-auto my-5 d-flex justify-content-around">
-                <NavLink to="/student_login" exact>
-                  <button type="button" className="btn rounded-pill btn-light px-4">Student Login</button>
-                </NavLink>
-                <NavLink to="/teacher_login" exact>
-                  <button type="button" className="btn rounded-pill btn-outline-info px-4">Teacher Login</button>
-                </NavLink>
               </div>
             </div>
           </div>
-        </div>
+        }
       </section>
       <Footer />
     </div>
   );
 }
 
-export default StudentRegister;
+export default AdminRegister;

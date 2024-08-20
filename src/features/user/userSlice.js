@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
     logged: false,
     error: null,
     loading: false,
-    studentData: {
+    userData: {
         fname: '',
         lname: '',
         regd: '',
@@ -16,10 +16,9 @@ const initialState = {
         isadmin: null,
         iscr: null,
         faculty_email: '',
-        bulk: 'false'
     }
 }
-export const studentLogin = createAsyncThunk('student/login', async ({ regd, password }, { rejectWithValue }) => {
+export const userLogin = createAsyncThunk('user/login', async ({ regd, password }, { rejectWithValue }) => {
     try {
         const config = {
             headers: {
@@ -43,31 +42,28 @@ export const studentLogin = createAsyncThunk('student/login', async ({ regd, pas
         return rejectWithValue(error.response.data.message || error.message);
     }
 });
-const studentSlice = createSlice({
-    name: 'student',
+const userSlice = createSlice({
+    name: 'user',
     initialState,
     reducers: {
-        logOutStudent: (state, action) => {
+        logOutUser: (state, action) => {
             state.logged = false;
             localStorage.removeItem('token');
-            state.studentData = null;
-        },
-        updateStudentData: (state, action) => {
-            console.log(action.payload);
+            state.userData = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(studentLogin.fulfilled, (state, action) => {
-                state.studentData = action.payload.user;
+            .addCase(userLogin.fulfilled, (state, action) => {
+                state.userData = action.payload.user;
                 localStorage.setItem('token', action.payload.token);
                 state.logged = true;
             })
-            .addCase(studentLogin.rejected, (state, action) => {
+            .addCase(userLogin.rejected, (state, action) => {
                 state.error = action.payload;
             });
     }
 });
 
-export const { updateStudentData, logOutStudent } = studentSlice.actions;
-export default studentSlice.reducer;
+export const { logOutUser } = userSlice.actions;
+export default userSlice.reducer;

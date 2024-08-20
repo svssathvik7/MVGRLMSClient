@@ -9,31 +9,24 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 function TeacherDash() {
 
   const history = useHistory();
-  const userData = UserData();
 
-  // const teacherLogin = useSelector(state => state.teacherLogin)
-  // const {loading, error, teacherInfo} = teacherLogin
-
-  // useEffect(() => {
-  //   if(!teacherInfo) {
-  //     history.push('/')
-  //   }
-  // }, [history, teacherInfo])
+  const userLogged = useSelector(state => state.user.logged);
+  const userData = useSelector(state => state.user.userData);
 
   useEffect(() => {
-    if ((userData.isLoggedIn === false || userData.type !== 'teacher')) {
+    if ((userLogged === false || userData.isadmin === false)) {
       history.push('/');
     }
   }, []);
 
   return (
     <div>
-      {userData.type === 'teacher' &&
+      {userData.isadmin === true &&
         <section>
           <div id="page_banner2" className="banner-wrapper bg-light w-100 py-5">
             <div className="container text-light d-flex justify-content-center align-items-center py-5 p-0">
               <div className="banner-content col-12 m-lg-auto text-center">
-                <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Teacher Dashboard</h1>
+                <h1 className="banner-heading display-3 pb-5 semi-bold-600 typo-space-line-center">Admin Dashboard</h1>
 
                 <div className="row gx-5 gx-sm-3 gx-lg-5 gy-lg-5 gy-3 pb-3 m-0">
                   <div className="col-xl-3 col-md-4 col-sm-6">

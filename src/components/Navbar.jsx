@@ -1,41 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from "../store/store";
 // import { logout } from '../actions/teacherActions';
-import UserData from './UserData';
 import { persistStore } from "redux-persist";
 import { NavLink } from "react-router-dom";
-import { logOutTeacher } from '../features/teacher/teacherSlice';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import axios from 'axios';
-import { logOutStudent } from '../features/student/studentSlice';
+import { codeContext } from '../contexts/CodeValidityContext';
+import { logOutUser } from '../features/user/userSlice';
 
 
 const persistor = persistStore(store);
 
 function Navbar() {
 
+  const { isValid } = useContext(codeContext);
+
   const history = useHistory();
 
   const dispatch = useDispatch();
 
-  const userData = UserData();
+  const userLogged = useSelector(state => state.user.logged);
 
-  // const teacherLoggedIn = useSelector(state => state.teacher.logged);
-
-  // const studentLoggedIn = useSelector(state => state.student.logged)
-
-  // const teacherData = useSelector(state => state.teacher.teacherData);
-
-  // const studentData = useSelector(state => state.student.studentData);
+  const userData = useSelector(state => state.user.userData);
 
   const handleLogOut = () => {
-    if (userData.type === 'teacher') {
-      dispatch(logOutTeacher());
-    }
-    else {
-      dispatch(logOutStudent());
-    }
+    dispatch(logOutUser());
     persistor.purge();
     history.push('/');
   }
@@ -67,7 +57,7 @@ function Navbar() {
 
 
   useEffect(() => {
-    if (userData.isLoggedIn) {
+    if (userLogged) {
       validateToken();
     }
   }, []);
@@ -108,17 +98,17 @@ function Navbar() {
             </ul>
             <div className="navbar align-self-center d-flex">
 
-              {userData.isLoggedIn ? (
+              {userLogged ? (
                 <>
-                  <NavLink className="nav-link text-success" to="/teacher_dashboard" exact title="Dashboard">
-                    Hi, <strong>{userData?.data?.fname}</strong>
+                  <NavLink className="nav-link text-success" to={userData.isadmin === true ? '/teacher_dashboard' : '/'} exact title="Dashboard">
+                    Hi, <strong>{userData?.fname}</strong>
                   </NavLink>
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
                     <i className="bi-bell text-primary" role="img"></i>
                   </NavLink>
-                  <NavLink className="nav-link" to="/student_register" exact title="Student">
+                  {userData.isadmin && <NavLink className="nav-link" to="/user_register" exact title="Student">
                     <i className="bi-person-badge text-primary" role="img"></i>
-                  </NavLink>
+                  </NavLink>}
                   <NavLink className="nav-link" onClick={handleLogOut} to="" title="Logout">
                     <i className="bi-box-arrow-right text-danger" role="img"></i>
                   </NavLink>
@@ -128,12 +118,14 @@ function Navbar() {
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
                     <i className="bi-bell text-primary" role="img"></i>
                   </NavLink>
-                  <NavLink className="nav-link" to="/student_login" exact title="Student">
+                  <NavLink className="nav-link" to="/user_login" exact title="User">
                     <i className="bi-person-badge text-primary" role="img"></i>
                   </NavLink>
-                  <NavLink className="nav-link" to="/teacher_login" exact title="Teacher">
-                    <i className="bi-person-circle text-success" role="img"></i>
-                  </NavLink>
+                  {isValid &&
+                    <NavLink className="nav-link" to="/admin_register" exact title="Teacher">
+                      <i className="bi-person-circle text-success" role="img"></i>
+                    </NavLink>
+                  }
                 </>
               )}
 
