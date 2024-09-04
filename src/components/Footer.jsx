@@ -10,12 +10,10 @@ function Footer() {
             <div className="col-lg-3 col-12 align-left">
               <NavLink className="navbar-brand" to="/" exact>
                 <i className='bi-building text-success'></i>
-                <span className="text-white">L</span>
-                <span className="text-primary">E</span>
                 <span className="text-white">M</span>
-                <span className="text-primary">N</span>
-                <span className="text-primary">O</span>
-                <span className="text-white">S</span>
+                <span className="text-primary">V</span>
+                <span className="text-white">G</span>
+                <span className="text-primary">R</span>
               </NavLink>
               <p className="text-light my-lg-4 my-2">
                 It's a Learning management System with online examination facility to help teachers and students.

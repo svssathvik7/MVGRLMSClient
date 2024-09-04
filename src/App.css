@@ -225,3 +225,26 @@ footer a.text-light:hover {
     right: 5% !important;
   }
 }
+
+
+/* new css added  */
+.navbar-logo{
+  height: 10dvh;
+  object-fit: contain;
+}
+.text-primary{
+  color: rgb(241,86,84)!important;
+}
+.icon-primary{
+  font-size: 1.5em;
+  margin-right: 0.25em;
+  margin-left: 0.25em;
+}
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+a{
+  cursor: pointer;
+}

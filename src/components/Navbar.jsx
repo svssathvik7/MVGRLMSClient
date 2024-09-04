@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import axios from 'axios';
 import { codeContext } from '../contexts/CodeValidityContext';
 import { logOutUser } from '../features/user/userSlice';
-
+import Logo from "../assets/img/logo.jpg"
 
 const persistor = persistStore(store);
 
@@ -67,13 +67,11 @@ function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow">
         <div className="container">
           <NavLink className="navbar-brand fs-3 fw-bold" to="/" exact>
-            <i className='bi-building text-success'></i>
-            <span className="text-dark">L</span>
-            <span className="text-primary">E</span>
+            <img className='navbar-logo' src={Logo} alt='logo'/>
             <span className="text-dark">M</span>
-            <span className="text-primary">N</span>
-            <span className="text-primary">O</span>
-            <span className="text-dark">S</span>
+            <span className="text-primary">V</span>
+            <span className="text-dark">G</span>
+            <span className="text-primary">R</span>
           </NavLink>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -100,26 +98,26 @@ function Navbar() {
 
               {userLogged ? (
                 <>
-                  <NavLink className="nav-link text-success" to={userData.isadmin === true ? '/teacher_dashboard' : '/'} exact title="Dashboard">
+                  <NavLink className="nav-link text-primary" to={userData.isadmin === true ? '/teacher_dashboard' : '/'} exact title="Dashboard">
                     Hi, <strong>{userData?.fname}</strong>
                   </NavLink>
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
-                    <i className="bi-bell text-primary" role="img"></i>
+                    <i className="bi-bell icon-primary" role="img"></i>
                   </NavLink>
                   {userData.isadmin && <NavLink className="nav-link" to="/user_register" exact title="Student">
-                    <i className="bi-person-badge text-primary" role="img"></i>
+                    <i className="bi-person-badge icon-primary" role="img"></i>
                   </NavLink>}
                   <NavLink className="nav-link" onClick={handleLogOut} to="" title="Logout">
-                    <i className="bi-box-arrow-right text-danger" role="img"></i>
+                    <i className="bi-box-arrow-right text-danger icon-primary" role="img"></i>
                   </NavLink>
                 </>
               ) : (
                 <>
                   <NavLink className="nav-link" to="/notices" exact title="Notices">
-                    <i className="bi-bell text-primary" role="img"></i>
+                    <i className="bi-bell icon-primary" role="img"></i>
                   </NavLink>
                   <NavLink className="nav-link" to="/user_login" exact title="User">
-                    <i className="bi-person-badge text-primary" role="img"></i>
+                    <i className="bi-person-badge icon-primary" role="img"></i>
                   </NavLink>
                   {isValid &&
                     <NavLink className="nav-link" to="/admin_register" exact title="Teacher">
